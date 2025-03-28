@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Car Insurance</title>
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <style>
+    .btn{margin: 5px;}
+    .flex-container {
+      display: flex;
+      background-color: DodgerBlue;
+    }
+    .flex-container > button {
+      background-color: #f1f1f1;
+      margin: 10px;
+      padding: 20px;
+      font-size: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container" style="margin:50px auto; max-width: 600px; width: 100%; border:1px solid #ddd; padding: 15px;">
+
+    <form action="">
+      <div class="form-group">
+        <label for="">ZIP Code</label>
+        <input type="text" class="form-control" id="zipcode">
+      </div>
+      <p id="result" style="color:red"></p>
+      <div class="form-group">
+        <button type="button" class="btn btn-block btn-info btn-large" onclick="ZIPCode()">Get Started</button>
+      </div>
+    </form>
+
+  </div>
+
+  <script>
+    let container = document.getElementById('container');
+    // check zip code
+    function ZIPCode()
+    {
+      let zipcode = document.getElementById('zipcode');
+      let result = document.getElementById('result');
+
+      fetch('zipcode.json') // Path to your JSON file
+      .then(response => response.json()) // Parse JSON response
+      .then(data => {
+        data.zipcodes.forEach((zip) =>{
+          if(zip == zipcode.value)
+          {
+            writeYears();
+            result.innerHTML = '';
+          }
+          else
+          {
+            result.innerHTML = 'Invalid ZIP Code';
+          }
+          console.log(zip);
+        });
+        // console.log(data.zipcodes[0]);
+
+      }) // Use the data
+      .catch(error => console.error('Error loading JSON:', error));
+    }
+
+    // read years
+    function writeYears()
+    {
+      container.innerHTML = '';
+      for(let x = 2026; x > 2000; x--)
+      {
+        let btn = document.createElement('button');
+        btn.setAttribute('class', 'btn btn-lg btn-info');
+        btn.setAttribute('onclick', 'brand(this)');
+        btn.innerHTML = x;
+        container.appendChild(btn);
+      }
+    }
+
+    //write brand
+    function brand(brand)
+    {
+      fetch('brand.json') // Path to your JSON file
+      .then(response => response.json()) // Parse JSON response
+      .then(data => {
+        container.innerHTML = '';
+        data.brands.forEach((b) =>{
+          let btn = document.createElement('button');
+          btn.setAttribute('class', 'btn btn-lg btn-success');
+          btn.setAttribute('onclick', 'brand(this)');
+          btn.innerHTML = b;
+          container.appendChild(btn);
+        });
+        // console.log(data.brands);
+
+      }) // Use the data
+      .catch(error => console.error('Error loading JSON:', error));
+    }
+  </script>
+  
+</body>
+</html>
